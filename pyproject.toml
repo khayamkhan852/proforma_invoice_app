@@ -1,5 +1,5 @@
 [project]
-name = "alwedyan_custom_app"
+name = "proforma_invoice_app"
 authors = [
     { name = "Khayam Khan", email = "khayamkhan852@gmail.com"}
 ]
