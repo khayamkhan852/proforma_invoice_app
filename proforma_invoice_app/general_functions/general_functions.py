@@ -6,7 +6,7 @@ def unlink_inter_company_doc(doctype, name, inter_company_reference):
 		ref_doc = "Purchase Invoice" if doctype == "Sales Invoice" else "Sales Invoice"
 		ref_field = "inter_company_invoice_reference"
 	else:
-		ref_doc = "Purchase Order" if doctype == "Sales Order" else "Sales Order"
+		ref_doc = "Purchase Order" if doctype == "Proforma" else "Sales Order"
 		ref_field = "inter_company_order_reference"
 
 	if inter_company_reference:

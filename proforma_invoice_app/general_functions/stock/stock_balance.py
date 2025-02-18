@@ -101,17 +101,17 @@ def get_reserved_qty(item_code, warehouse):
 				(select
 					qty as dnpi_qty,
 					(
-						select qty from `tabSales Order Item`
+						select qty from `tabProforma Item`
 						where name = dnpi.parent_detail_docname
 						and (delivered_by_supplier is null or delivered_by_supplier = 0)
 					) as so_item_qty,
 					(
-						select delivered_qty from `tabSales Order Item`
+						select delivered_qty from `tabProforma Item`
 						where name = dnpi.parent_detail_docname
 						and delivered_by_supplier = 0
 					) as so_item_delivered_qty,
 					(
-						select returned_qty from `tabSales Order Item`
+						select returned_qty from `tabtabProforma Item`
 						where name = dnpi.parent_detail_docname
 						and delivered_by_supplier = 0
 					) as so_item_returned_qty,
@@ -122,9 +122,9 @@ def get_reserved_qty(item_code, warehouse):
 					select qty, parent_detail_docname, parent, name
 					from `tabPacked Item` dnpi_in
 					where item_code = %s and warehouse = %s
-					and parenttype='Sales Order'
+					and parenttype='Proforma'
 					and item_code != parent_item
-					and exists (select * from `tabSales Order` so
+					and exists (select * from `tabProforma` so
 					where name = dnpi_in.parent and docstatus = 1 and status not in ('On Hold', 'Closed'))
 				) dnpi)
 			union
@@ -132,10 +132,10 @@ def get_reserved_qty(item_code, warehouse):
 					delivered_qty as so_item_delivered_qty,
 					returned_qty as so_item_returned_qty,
 					{dont_reserve_on_return}, parent, name
-				from `tabSales Order Item` so_item
+				from `tabProforma Item` so_item
 				where item_code = %s and warehouse = %s
 				and (so_item.delivered_by_supplier is null or so_item.delivered_by_supplier = 0)
-				and exists(select * from `tabSales Order` so
+				and exists(select * from `tabProforma` so
 					where so.name = so_item.parent and so.docstatus = 1
 					and so.status not in ('On Hold', 'Closed')))
 			) tab

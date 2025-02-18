@@ -24,7 +24,7 @@ from erpnext.stock.doctype.item.item import get_item_defaults, get_uom_conv_fact
 from erpnext.stock.doctype.item_manufacturer.item_manufacturer import get_item_manufacturer_part_no
 from erpnext.stock.doctype.price_list.price_list import get_price_list_details
 
-sales_doctypes = ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice", "POS Invoice"]
+sales_doctypes = ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice", "POS Invoice", "Proforma"]
 purchase_doctypes = [
 	"Material Request",
 	"Supplier Quotation",
@@ -86,7 +86,7 @@ def get_item_details(args, doc=None, for_validate=False, overwrite_warehouse=Tru
 
 	get_party_item_code(args, item, out)
 
-	if args.get("doctype") in ["Sales Order", "Quotation"]:
+	if args.get("doctype") in ["Sales Order", "Quotation", "Proforma"]:
 		set_valuation_rate(out, args)
 
 	update_party_blanket_order(args, out)
@@ -358,7 +358,7 @@ def get_basic_details(args, item, overwrite_warehouse=True):
 			if args.get("doctype") in ["Sales Invoice", "Purchase Invoice"]
 			else 0,
 			"delivered_by_supplier": item.delivered_by_supplier
-			if args.get("doctype") in ["Sales Order", "Sales Invoice"]
+			if args.get("doctype") in ["Sales Order", "Sales Invoice", "Proforma"]
 			else 0,
 			"is_fixed_asset": item.is_fixed_asset,
 			"last_purchase_rate": item.last_purchase_rate if args.get("doctype") in ["Purchase Order"] else 0,
@@ -1288,7 +1288,7 @@ def get_price_list_currency_and_exchange_rate(args):
 	if not args.price_list:
 		return {}
 
-	if args.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
+	if args.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice", "Proforma"]:
 		args.update({"exchange_rate": "for_selling"})
 	elif args.doctype in ["Purchase Order", "Purchase Receipt", "Purchase Invoice"]:
 		args.update({"exchange_rate": "for_buying"})
@@ -1417,7 +1417,7 @@ def get_blanket_order_details(args):
 			)
 		)
 
-		if args.customer and args.doctype == "Sales Order":
+		if args.customer and args.doctype == "Proforma":
 			query = query.where(bo.customer == args.customer)
 		elif args.supplier and args.doctype == "Purchase Order":
 			query = query.where(bo.supplier == args.supplier)
