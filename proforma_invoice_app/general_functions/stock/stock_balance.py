@@ -111,7 +111,7 @@ def get_reserved_qty(item_code, warehouse):
 						and delivered_by_supplier = 0
 					) as so_item_delivered_qty,
 					(
-						select returned_qty from `tabtabProforma Item`
+						select returned_qty from `tabProforma Item`
 						where name = dnpi.parent_detail_docname
 						and delivered_by_supplier = 0
 					) as so_item_returned_qty,
